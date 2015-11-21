@@ -1,0 +1,14 @@
+{
+    "name": "martinbutt/mac-brightness-api",
+    "description": "A RESTful API to control the brightness of your Mac screen",
+    "license": "proprietary",
+    "require": {
+        "slim/slim": "^2.6"
+    },
+    "authors": [
+        {
+            "name": "Martin Butt",
+            "email": "git@martinbutt.com"
+        }
+    ]
+}
