@@ -1,10 +1,13 @@
 <?php
+set_time_limit(0);
+
 require '../vendor/autoload.php';
 
 use Slim\Slim;
 
-define('BRIGHTNESS_STEPS', 16);
-define('DEFUALT_FADE_IN_RATE', 10);
+define('BRIGHTNESS_STEPS', 10);
+define('DEFAULT_FADE_IN_RATE', 2);
+define('DEFAULT_DISPLAY', 0);
 
 $app = new Slim();
 
@@ -13,20 +16,18 @@ $app->get('/wake', function () use ($app) {
 	$level = isset($vars['level']) ? $vars['level'] : BRIGHTNESS_STEPS;
 	$level = ($level > BRIGHTNESS_STEPS) ? BRIGHTNESS_STEPS : $level;
 	$rate = isset($vars['rate']) ? $vars['rate'] : DEFAULT_FADE_IN_RATE;
+	$display = isset($vars['display']) ? $vars['display'] : DEFAULT_DISPLAY;
 
-	dimToZero();
+	dimToZero($display);
 
 	for ($i=0; $i<$level; $i++) {
-		sleep($rate);
-		system('/bin/bash ../bin/screenctl.sh up');
+		system('../bin/brightness -d '.$display.' '.($i/10));
+		sleep((int)$rate);
 	}
 });
 
-function dimToZero() {
-	for ($i=0; $i<BRIGHTNESS_STEPS; $i++) {
-		system('/bin/bash ../bin/screenctl.sh down');
-	}
+function dimToZero($display) {
+	exec('../bin/brightness -d '.$display.' 0');
 }
-	
 
 $app->run();
